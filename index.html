@@ -1,0 +1,134 @@
+<!-- ISAAC HINMAN 2015 -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="Isaac Hinman">
+<title>DARKSOUND</title>
+
+<!-- FONTS -->
+<link href='http://fonts.googleapis.com/css?family=Jura:300' rel='stylesheet' type='text/css'>
+<!-- END FONTS -->
+
+<!-- CSS -->
+<style>
+body {
+ overflow: hidden;
+}
+.loader{
+  position: relative;
+  margin: auto;
+  top: 48vh;
+  width: 20%;
+  text-align: center;
+}
+svg path,
+svg rect{
+  fill: #fff;
+}
+</style>
+<!-- END CSS -->
+
+<!-- CREATE WEBAUDIO CONTEXT -->
+<!-- webkitAudioContext is deprecated in Firefox and Chrome (Chrome still supports but Firefox doesn't), and Safari will not support AudioContext, so this if/else function separates webkitbrowsers from non-webkitbrowsers -->
+<script>
+if (window.webkitAudioContext) {
+    context = new webkitAudioContext();
+} else if (window.AudioContext) {
+    context = new AudioContext();
+} else {
+    alert("Your browser does not support Web Audio API. Please use a more modern browser to access sound.");
+}
+</script>
+<!-- END CREATE WEBAUDIO CONTEXT -->
+
+<!-- CREATE JS SCRIPTS -->
+<script src="https://code.createjs.com/createjs-2014.12.12.min.js"></script>
+<script src="http://code.createjs.com/movieclip-0.7.1.min.js"></script>
+<!-- END CREATE JS SCRIPTS -->
+
+<!-- LOAD SOUNDS -->
+<script src="sounds.js"></script>
+<!-- END LOAD SOUNDS -->
+
+<!-- MAIN INTERACTIVE SCRIPT -->
+<script src="ih_darksound.js"></script>
+<!-- END MAIN INTERACTIVE SCRIPT -->
+
+<!-- CREATE CANVAS AND INITIALISE -->
+<script>
+var canvas, stage, exportRoot;
+
+function init() {
+    canvas = document.getElementById("canvas");
+    images = images||{};
+
+    var loader = new createjs.LoadQueue(false);
+    loader.installPlugin(createjs.Sound);
+    loader.addEventListener("fileload", handleFileLoad);
+    loader.addEventListener("complete", handleComplete);
+    loader.loadManifest(lib.properties.manifest);
+}
+
+function handleFileLoad(evt) {
+    if (evt.item.type == "image") { images[evt.item.id] = evt.result; }
+}
+
+function handleComplete() {
+    exportRoot = new lib.ih_darksound();
+
+    stage = new createjs.Stage(canvas);
+    stage.addChild(exportRoot);
+    stage.update();
+    stage.enableMouseOver();
+
+    createjs.Ticker.setFPS(lib.properties.fps);
+    createjs.Ticker.addEventListener("tick", stage);
+}
+
+function playSound(id, loop) {
+    createjs.Sound.play(id, createjs.Sound.INTERRUPT_EARLY, 0, 0, loop);
+}
+</script>
+<!-- END CREATE CANVAS AND INITIALISE -->
+
+<!-- LOADING ANIMATION -->
+    <div class="loader" title="0">
+  <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+  <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+  <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+    C22.32,8.481,24.301,9.057,26.013,10.047z">
+    <animateTransform attributeType="xml"
+      attributeName="transform"
+      type="rotate"
+      from="0 20 20"
+      to="360 20 20"
+      dur="1s"
+      repeatCount="indefinite"/>
+    </path>
+  </svg>
+</div>
+<!-- END LOADING ANIMATION -->
+
+<!-- GOOGLE ANALYTICS -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-52213916-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<!-- END GOOGLE ANALYTICS -->
+
+</head>
+
+<body onload="init();" style="background-color:#000">
+    <canvas id="canvas" width="1024" height="768" style="width: 100%; max-width: 1024px; margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0;"></canvas>
+</body>
+</html>
